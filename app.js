@@ -6,12 +6,17 @@ import cors from 'cors';
 
 import productRotuer from './routes/productsRouter.js';
 import categoryRotuer from './routes/categoryRouter.js';
-import userRotuer from './routes/usersRouter.js';
-import orderRotuer from './routes/ordersRouter.js';
+import userRotuer from './routes/userRouter.js';
+import orderRotuer from './routes/orderRouter.js';
+import { auth } from './middleware/auth.js';
+import { errorHandler } from './helpers/errorHandler.js';
+
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
-
-const Product = mongoose.model('product', productSchema);
 
 // global
 dotenv.config();
@@ -33,8 +38,11 @@ mongoose
 // middleware
 app.use(express.json());
 app.use(morgan('tiny'));
-appapp.use(cors());
+app.use(cors());
 app.options('*', cors);
+app.use(auth());
+app.use('/public/uploads', express.static(__dirname + '/public/uploads'));
+app.use(errorHandler);
 
 // routes
 app.use('/api/v1/products', productRotuer);

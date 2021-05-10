@@ -1,8 +1,11 @@
 import mongoose from 'mongoose';
 
 const orderItemSchema = new mongoose.Schema({
-  product: Product,
-  quantity: Number,
+  quantity: {
+    type: Number,
+    required: [true, 'Quantity is required.'],
+  },
+  product: { type: mongoose.Schema.ObjectId, ref: 'Product' },
 });
 
 const OrderItem = mongoose.model('OrderItem', orderItemSchema);
